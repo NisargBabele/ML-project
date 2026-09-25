@@ -1,63 +1,109 @@
 import os
 import sys
-from src.exception import CustomException
-from src.logger import logging
-import pandas as pd
-
-from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 
-from src.components.data_transformation import DataTransformation
-from src.components.data_transformation import DataTransformationConfig
+import pandas as pd
+from sklearn.model_selection import train_test_split
 
-from src.components.model_trainer import ModelTrainerConfig
+from src.exception import CustomException
+from src.logger import logging
+from src.components.data_transformation import DataTransformation
 from src.components.model_trainer import ModelTrainer
+
+
+# Find the main project folder.
+# This keeps the artifact paths correct even if the script is run from another folder.
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    )
+)
+
+
 @dataclass
 class DataIngestionConfig:
-    train_data_path: str=os.path.join('artifacts',"train.csv")
-    test_data_path: str=os.path.join('artifacts',"test.csv")
-    raw_data_path: str=os.path.join('artifacts',"data.csv")
+    # These are the files created during data ingestion.
+    train_data_path: str = os.path.join(BASE_DIR, "artifacts", "train.csv")
+    test_data_path: str = os.path.join(BASE_DIR, "artifacts", "test.csv")
+    raw_data_path: str = os.path.join(BASE_DIR, "artifacts", "data.csv")
+
 
 class DataIngestion:
     def __init__(self):
-        self.ingestion_config=DataIngestionConfig()
+        self.ingestion_config = DataIngestionConfig()
 
     def initiate_data_ingestion(self):
         logging.info("Entered the data ingestion method or component")
+
         try:
-            df=pd.read_csv('notebook\data\stud.csv')
-            logging.info('Read the dataset as dataframe')
+            # Read the original dataset.
+            data_path = os.path.join(BASE_DIR, "notebook", "data", "stud.csv")
+            df = pd.read_csv(data_path)
 
-            os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
+            logging.info("Read the dataset as dataframe")
 
-            df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
+            # Create the artifacts folder if it does not exist.
+            os.makedirs(
+                os.path.dirname(self.ingestion_config.train_data_path),
+                exist_ok=True
+            )
+
+            # Save a copy of the complete raw dataset.
+            df.to_csv(
+                self.ingestion_config.raw_data_path,
+                index=False,
+                header=True
+            )
 
             logging.info("Train test split initiated")
-            train_set,test_set=train_test_split(df,test_size=0.2,random_state=42)
 
-            train_set.to_csv(self.ingestion_config.train_data_path,index=False,header=True)
+            # Split the raw data into training and testing data.
+            train_set, test_set = train_test_split(
+                df,
+                test_size=0.2,
+                random_state=42
+            )
 
-            test_set.to_csv(self.ingestion_config.test_data_path,index=False,header=True)
+            # Save the raw train and test data.
+            train_set.to_csv(
+                self.ingestion_config.train_data_path,
+                index=False,
+                header=True
+            )
 
-            logging.info("Inmgestion of the data iss completed")
+            test_set.to_csv(
+                self.ingestion_config.test_data_path,
+                index=False,
+                header=True
+            )
 
-            return(
+            logging.info("Ingestion of the data is completed")
+
+            return (
                 self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path
-
             )
+
         except Exception as e:
-            raise CustomException(e,sys)
-        
-if __name__=="__main__":
-    obj=DataIngestion()
-    train_data,test_data=obj.initiate_data_ingestion()
-
-    data_transformation=DataTransformation()
-    train_arr,test_arr,_=data_transformation.initiate_data_transformation(train_data,test_data)
-
-    modeltrainer=ModelTrainer()
-    print(modeltrainer.initiate_model_trainer(train_arr,test_arr))
+            raise CustomException(e, sys)
 
 
+if __name__ == "__main__":
+    # Step 1: Read the dataset and create train/test files.
+    obj = DataIngestion()
+    train_data, test_data = obj.initiate_data_ingestion()
 
+    # Step 2: Transform the train/test data.
+    data_transformation = DataTransformation()
+    train_arr, test_arr, _ = (
+        data_transformation.initiate_data_transformation(
+            train_data,
+            test_data
+        )
+    )
+
+    # Step 3: Train and save the best model.
+    modeltrainer = ModelTrainer()
+    print(modeltrainer.initiate_model_trainer(train_arr, test_arr))

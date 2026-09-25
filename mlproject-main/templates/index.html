@@ -1,1 +1,38 @@
-<h1>Welcome to the home page</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f8f6" />
+  <title>Forma — Student score insights</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="Forma home"><span class="brand-mark">f</span> forma</a>
+    <nav class="nav-links" aria-label="Main navigation"><a href="#how-it-works">How it works</a><a class="nav-cta" href="{{ url_for('predict_datapoint') }}">Open predictor <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main>
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="status-dot"></span> STUDENT PERFORMANCE · ML INSIGHTS</div>
+        <h1>See the signals<br />behind a <em>math score.</em></h1>
+        <p class="hero-lede">A thoughtful, data-informed estimate of student math performance—based on academic results and learning context.</p>
+        <div class="hero-actions"><a class="button button-primary" href="{{ url_for('predict_datapoint') }}">Explore a prediction <span aria-hidden="true">→</span></a><a class="text-link" href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a></div>
+        <div class="trust-line"><span class="avatar-stack" aria-hidden="true"><i>R</i><i>W</i><i>M</i></span><span>Built on student performance data<br /><strong>Designed for clear, responsible insights</strong></span></div>
+      </div>
+      <div class="hero-visual" aria-label="Illustration of a sample score prediction">
+        <div class="visual-top"><span>PERFORMANCE SNAPSHOT</span><span class="live-pill"><i></i> SAMPLE</span></div>
+        <div class="visual-title">Math score estimate</div>
+        <div class="score-display"><strong>78</strong><span>/ 100</span><span class="score-change">+6 pts</span></div>
+        <div class="chart" aria-label="Illustrative score trend"><div class="chart-y"><span>100</span><span>75</span><span>50</span><span>25</span></div><div class="chart-main"><div class="chart-grid"></div><svg viewBox="0 0 440 150" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4a7567" stop-opacity=".2"/><stop offset="1" stop-color="#4a7567" stop-opacity="0"/></linearGradient></defs><path d="M0 124 C42 118 50 90 92 96 S145 105 184 72 S240 89 278 58 S335 67 370 34 S415 43 440 15 V150 H0Z" fill="url(#area)"/><path d="M0 124 C42 118 50 90 92 96 S145 105 184 72 S240 89 278 58 S335 67 370 34 S415 43 440 15" fill="none" stroke="#4a7567" stroke-width="3" vector-effect="non-scaling-stroke"/><circle cx="440" cy="15" r="5" fill="#4a7567"/></svg><div class="chart-x"><span>READING</span><span>WRITING</span><span>CONTEXT</span><span>ESTIMATE</span></div></div></div>
+        <div class="visual-foot"><span class="legend"><i></i> Illustrative estimate</span><span>MODEL PREVIEW</span></div>
+        <div class="floating-note"><span class="note-icon">↗</span><span><strong>Context matters</strong><small>Scores meet student background</small></span></div>
+      </div>
+    </section>
+    <section class="feature-band" id="how-it-works"><div class="wrap feature-inner"><div class="section-intro"><div class="eyebrow">A CLEARER STARTING POINT</div><h2>From student context<br />to useful perspective.</h2><p>Explore how a few connected factors can inform a math score estimate.</p></div><div class="feature-list"><article class="feature-item"><span class="feature-number">01</span><div><h3>Bring the full picture</h3><p>Combine reading and writing scores with student and learning context.</p></div><span class="feature-icon">◎</span></article><article class="feature-item"><span class="feature-number">02</span><div><h3>Explore an estimate</h3><p>A trained machine learning model returns a predicted math score in seconds.</p></div><span class="feature-icon">⌁</span></article><article class="feature-item"><span class="feature-number">03</span><div><h3>Use it as a conversation starter</h3><p>Get a simple point of reference, not a substitute for human judgment.</p></div><span class="feature-icon">↗</span></article></div></div></section>
+    <section class="bottom-cta wrap"><div><div class="eyebrow">READY WHEN YOU ARE</div><h2>Turn the inputs into insight.</h2></div><a class="button button-dark" href="{{ url_for('predict_datapoint') }}">Start a prediction <span aria-hidden="true">→</span></a></section>
+  </main>
+  <footer class="footer wrap"><a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">f</span> forma</a><span>Student performance insights · Estimates are for exploration only</span><a href="https://www.kaggle.com/datasets/spscientist/students-performance-in-exams" target="_blank" rel="noopener">About the dataset ↗</a></footer>
+</body>
+</html>

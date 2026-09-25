@@ -1,111 +1,43 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f8f6" />
+  <title>Predict a score — Forma</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
 <body>
-    <div class="login">
-       <h1>Student Exam Performance Indicator</h1>
-   
-       <form action="{{ url_for('predict_datapoint')}}" method="post">
-        <h1>
-            <legend>Student Exam Performance Prediction</legend>
-        </h1>
-        <div class="mb-3">
-            <label class="form-label">Gender</label>
-            <select class="form-control" name="gender" placeholder="Enter you Gender" required>
-                <option class="placeholder" selected disabled value="">Select your Gender</option>
-                <option value="male">
-                    Male
-                </option>
-                <option value="female">
-                    Female
-                </option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Race or Ethnicity</label>
-            <select class="form-control" name="ethnicity" placeholder="Enter you ethnicity" required>
-                <option class="placeholder" selected disabled value="">Select Ethnicity</option>
-                <option value="group A">
-                    Group A
-                </option>
-                <option value="group B">
-                    Group B
-                </option>
-                <option value="group C">
-                    Group C
-                </option>
-                <option value="group D">
-                    Group D
-                </option>
-                <option value="group E">
-                    Group E
-                </option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Parental Level of Education</label>
-            <select class="form-control" name="parental_level_of_education"
-                placeholder="Enter you Parent Education" required>
-                <option class="placeholder" selected disabled value="">Select Parent Education</option>
-                <option value="associate's degree">
-                    associate's degree
-                </option>
-                <option value="bachelor's degree">
-                    bachelor's degree
-                </option>
-                <option value="high school">
-                    high school
-                </option>
-                <option value="master's degree">
-                    master's degree
-                </option>
-                <option value="some college">
-                    some college
-                </option>
-                <option value="some high school">
-                    some high school
-                </option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Lunch Type</label>
-            <select class="form-control" name="lunch" placeholder="Enter you Lunch" required>
-                <option class="placeholder" selected disabled value="">Select Lunch Type</option>
-                <option value="free/reduced">
-                    free/reduced
-                </option>
-                <option value="standard">
-                    standard
-                </option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Test preparation Course</label>
-            <select class="form-control" name="test_preparation_course" placeholder="Enter you Course"
-                required>
-                <option class="placeholder" selected disabled value="">Select Test_course</option>
-                <option value="none">
-                    None
-                </option>
-                <option value="completed">
-                    Completed
-                </option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Writing Score out of 100</label>
-            <input class="form-control" type="number" name="reading_score"
-                placeholder="Enter your Reading score" min='0' max='100' />
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Reading Score out of 100</label>
-            <input class="form-control" type="number" name="writing_score"
-                placeholder="Enter your Reading Score" min='0' max='100' />
-        </div>
-        <div class="mb-3">
-            <input class="btn btn-primary" type="submit" value="Predict your Maths Score" required />
-        </div>
-    </form>
-    <h2>
-       THE  prediction is {{results}}
-    </h2>
-   <body>
+  <header class="topbar"><a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">f</span> forma</a><nav class="nav-links"><a href="{{ url_for('index') }}">Overview</a><span class="nav-current">Score predictor</span></nav></header>
+  <main class="predict-page wrap">
+    <div class="predict-heading"><a class="back-link" href="{{ url_for('index') }}">← Back to overview</a><div class="eyebrow"><span class="status-dot"></span> INTERACTIVE PREDICTOR</div><h1>Build a student<br /><em>performance profile.</em></h1><p>Enter the available context and scores to explore an estimated math result.</p></div>
+    <div class="predict-layout">
+      <form action="{{ url_for('predict_datapoint') }}" method="post" class="predict-form">
+        <section class="form-section"><div class="form-section-head"><span class="step-index">01</span><div><h2>Student context</h2><p>A few details about the learning environment.</p></div></div>
+          <div class="form-grid">
+            <div class="field"><label for="gender">Gender</label><select id="gender" name="gender" required><option selected disabled value="">Select gender</option><option value="female" {% if form_data and form_data.gender == 'female' %}selected{% endif %}>Female</option><option value="male" {% if form_data and form_data.gender == 'male' %}selected{% endif %}>Male</option></select></div>
+            <div class="field"><label for="ethnicity">Race / ethnicity group</label><select id="ethnicity" name="ethnicity" required><option selected disabled value="">Select a group</option>{% for group in ['group A','group B','group C','group D','group E'] %}<option value="{{ group }}" {% if form_data and form_data.ethnicity == group %}selected{% endif %}>{{ group|title }}</option>{% endfor %}</select></div>
+            <div class="field"><label for="parental_level_of_education">Parent or guardian education</label><select id="parental_level_of_education" name="parental_level_of_education" required><option selected disabled value="">Select education level</option>{% for level in ["some high school", "high school", "some college", "associate's degree", "bachelor's degree", "master's degree"] %}<option value="{{ level }}" {% if form_data and form_data.parental_level_of_education == level %}selected{% endif %}>{{ level|title }}</option>{% endfor %}</select></div>
+            <div class="field"><label for="lunch">Lunch program</label><select id="lunch" name="lunch" required><option selected disabled value="">Select lunch type</option><option value="standard" {% if form_data and form_data.lunch == 'standard' %}selected{% endif %}>Standard</option><option value="free/reduced" {% if form_data and form_data.lunch == 'free/reduced' %}selected{% endif %}>Free / reduced</option></select></div>
+            <div class="field"><label for="test_preparation_course">Test preparation</label><select id="test_preparation_course" name="test_preparation_course" required><option selected disabled value="">Select preparation status</option><option value="none" {% if form_data and form_data.test_preparation_course == 'none' %}selected{% endif %}>Not completed</option><option value="completed" {% if form_data and form_data.test_preparation_course == 'completed' %}selected{% endif %}>Completed</option></select></div>
+          </div>
+        </section>
+        <section class="form-section score-section"><div class="form-section-head"><span class="step-index">02</span><div><h2>Current scores</h2><p>Scores from 0 to 100, inclusive.</p></div></div>
+          <div class="form-grid form-grid-scores"><div class="field score-field"><label for="reading_score">Reading score</label><div class="input-suffix"><input id="reading_score" name="reading_score" type="number" min="0" max="100" step="1" placeholder="0" value="{{ form_data.reading_score if form_data else '' }}" required /><span>/ 100</span></div><div class="score-meter"><i id="reading-meter"></i></div></div><div class="field score-field"><label for="writing_score">Writing score</label><div class="input-suffix"><input id="writing_score" name="writing_score" type="number" min="0" max="100" step="1" placeholder="0" value="{{ form_data.writing_score if form_data else '' }}" required /><span>/ 100</span></div><div class="score-meter"><i id="writing-meter"></i></div></div></div>
+        </section>
+        <div class="submit-row"><p>All fields are required to generate an estimate.</p><button class="button button-primary" type="submit">Generate estimate <span aria-hidden="true">→</span></button></div>
+      </form>
+      <aside class="result-panel" aria-live="polite"><div class="result-panel-top"><span class="eyebrow">YOUR ESTIMATE</span><span class="result-icon">✳</span></div>{% if results is not none and results is defined and results != '' %}{% if results is number %}<div class="result-score">{{ results }}<span>/ 100</span></div><h2>Predicted math score</h2><p class="result-copy">This model estimate reflects the scores and context entered. Use it as one point of reference.</p><div class="result-scale"><div class="result-scale-line"><i style="left: {{ results }}%"></i></div><div class="scale-labels"><span>0</span><span>50</span><span>100</span></div></div><span class="result-tag"><i></i> ESTIMATE COMPLETE</span>{% else %}<h2>We couldn’t generate an estimate</h2><p class="result-copy">{{ results }}</p>{% endif %}{% else %}<div class="result-empty"><div class="empty-orbit"><span>f</span></div><h2>Your result will appear here</h2><p>Complete the student profile and scores to see a model-generated estimate.</p></div><div class="result-hint"><span>↗</span><p><strong>Designed for exploration</strong><br />This estimate is not a grade or a decision about a student.</p></div>{% endif %}</aside>
+    </div>
+  </main>
+  <footer class="footer wrap"><a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">f</span> forma</a><span>Student performance insights · Estimates are for exploration only</span><a href="https://www.kaggle.com/datasets/spscientist/students-performance-in-exams" target="_blank" rel="noopener">About the dataset ↗</a></footer>
+  <script>
+    for (const id of ['reading_score', 'writing_score']) {
+      const input = document.getElementById(id);
+      const meter = document.getElementById(id.replace('_score', '-meter'));
+      const update = () => { const value = Math.max(0, Math.min(100, Number(input.value) || 0)); meter.style.width = input.value === '' ? '0%' : `${value}%`; };
+      input.addEventListener('input', update); update();
+    }
+  </script>
+</body>
 </html>
